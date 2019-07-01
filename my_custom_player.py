@@ -43,7 +43,15 @@ class CustomPlayer(DataPlayer):
         #          call self.queue.put(ACTION) at least once before time expires
         #          (the timer is automatically managed for you)
         import random
-        self.queue.put(random.choice(state.actions()))
+        #self.queue.put(random.choice(state.actions()))
         #action = self.mcts()
         #self.queue.put(action)
         #self.context = object_you_want_to_save  # self.context will contain this object on the next turn
+        if state.ply_count < 4:
+            self.queue.put(random.choice(state.actions()))
+        else:
+            ###### iterative deepening ######
+            depth_limit = 4
+            for depth in range(1, depth_limit + 1):
+                best_move = alpha_beta_search(state, self.player_id, depth)
+            self.queue.put(best_move)
